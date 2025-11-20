@@ -40,14 +40,19 @@ def buscar_desafios_semanais():
 # --- Servidor Flask ---
 app = Flask(__name__)
 
+# ROTA PRINCIPAL (evita erro 404 no Render)
+@app.route("/", methods=["GET"])
+def home():
+    return "Oráculo Fortnite ONLINE ✔️", 200
+
 @app.route("/whatsapp", methods=['GET', 'POST'])
 def webhook_whatsapp():
 
-    # --- GET (Twilio valida o endpoint) ---
+    # GET = Twilio testando / navegador abrindo
     if request.method == 'GET':
         return "OK", 200
 
-    # --- POST (mensagem real do usuário) ---
+    # POST = Mensagem do usuário
     mensagem_usuario = request.values.get('Body', '').lower().strip()
     resp = MessagingResponse()
 
@@ -59,8 +64,8 @@ def webhook_whatsapp():
         corpo_resposta = (
             "Saudações, guerreiro. As visões do Oráculo estão ao seu alcance.\n\n"
             "Responda com um dos termos abaixo:\n"
-            "➡️ *loja* - Para ver os tesouros de hoje.\n"
-            "➡️ *desafios* - Para trilhar o caminho da sabedoria."
+            "➡️ loja — Para ver os tesouros de hoje.\n"
+            "➡️ desafios — Para trilhar o caminho da sabedoria."
         )
 
     resp.message(corpo_resposta)
