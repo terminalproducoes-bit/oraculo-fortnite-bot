@@ -1,26 +1,12 @@
 import os
 from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
-from twilio.request_validator import RequestValidator # Importamos o validador
 import traceback
 
 app = Flask(__name__)
 
-# --- Validador da Twilio ---
-# No futuro, usaremos isso para segurança. Por agora, vamos apenas instanciar.
-validator = RequestValidator(os.environ.get('TWILIO_AUTH_TOKEN', ''))
-
 @app.route("/whatsapp", methods=['POST'])
 def webhook_whatsapp():
-    # --- Verificação de Segurança (DESATIVADA PARA TESTE) ---
-    # is_valid_request = validator.validate(
-    #     request.url,
-    #     request.form,
-    *   # request.headers.get('X-Twilio-Signature', '')
-    # )
-    # if not is_valid_request:
-    #     return "Falha na validação", 403
-
     resp = MessagingResponse()
     try:
         incoming_msg = request.values.get('Body', '').lower().strip()
